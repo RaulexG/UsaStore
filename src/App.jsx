@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -40,7 +39,13 @@ export default function App() {
     let mounted = true;
     (async () => {
       const res = await window.api.auth.needsSetup();
-      if (mounted) setNeedsSetup(Boolean(res?.needs ?? res));
+      const needs =
+        typeof res === "boolean"
+          ? res
+          : res?.ok
+          ? !!res.needs
+          : false;
+      if (mounted) setNeedsSetup(needs);
     })();
     return () => { mounted = false; };
   }, []);
